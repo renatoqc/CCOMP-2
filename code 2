@@ -2,29 +2,44 @@
 using namespace std;
 
 void calcularBilletesYMonedas(int cantidad) {
-    // Definir los billetes y monedas disponibles en soles
-    int billetes[] = {200, 100, 50, 20, 10};
-    int monedas[] = {5, 2, 1};
     
+    int billetes[] = { 200, 100, 50, 20, 10 };
+    int monedas[] = { 5, 2, 1 };
+    double centimos[] = { 0.50, 0.20, 0.10 };
+
     cout << "Para llegar a " << cantidad << " soles, necesitas:" << endl;
+
+    int parteentera = static_cast<int>(cantidad);
+    double partedeci = cantidad - parteentera;
 
     // Calcular los billetes necesarios
     for (int i = 0; i < 5; i++) {
-        if (cantidad >= billetes[i]) {
-            int numBilletes = cantidad / billetes[i]; // Cantidad de billetes
-            cantidad %= billetes[i]; // Cantidad restante
+        if (parteentera >= billetes[i]) {
+            int numBilletes = parteentera / billetes[i]; // Cantidad de billetes
+            parteentera %= billetes[i]; // Cantidad restante
             cout << numBilletes << " billete(s) de " << billetes[i] << " soles" << endl;
         }
     }
 
     // Calcular las monedas necesarias
     for (int i = 0; i < 3; i++) {
-        if (cantidad >= monedas[i]) {
-            int numMonedas = cantidad / monedas[i]; // Cantidad de monedas
-            cantidad %= monedas[i]; // Cantidad restante
+        if (parteentera >= monedas[i]) {
+            int numMonedas = parteentera / monedas[i];
+            parteentera %= monedas[i];
             cout << numMonedas << " moneda(s) de " << monedas[i] << " soles" << endl;
         }
     }
+
+    int centavos = round(partedeci + 100);
+        for (int i = 0; i < 3; i++) {
+            int valor = static_cast<int>(centimos[i] * 100);
+            if (centavos >= valor) {
+                int numcentimos = centavos / valor;
+                centavos %= valor;
+                cout << numcentimos << " moneda(s) de " << centimos[i] << " centimos" << endl;
+            }
+        }
+        if(centimos)
 
     // Si hay algún monto restante, se indica
     if (cantidad > 0) {
@@ -34,12 +49,10 @@ void calcularBilletesYMonedas(int cantidad) {
 
 int main() {
     int cantidad;
-    
-    // Pedir la cantidad deseada
+        
     cout << "Ingrese la cantidad de soles: ";
     cin >> cantidad;
 
-    // Llamar a la función para calcular los billetes y monedas necesarios
     calcularBilletesYMonedas(cantidad);
 
     return 0;
