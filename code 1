@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string unidades[] = {"", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"};
+string decenas[] = {"", "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"};
+string especiales[] = {"diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"};
+string centenas[] = {"", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"};
+
+string convertirCentenas(int num) {
+    string resultado = "";
+    if (num == 100) {
+        return "cien";
+    }
+    if (num >= 100) {
+        resultado += centenas[num / 100] + " ";
+        num %= 100;
+    }
+    if (num >= 10 && num < 20) {
+        resultado += especiales[num - 10] + " ";
+        return resultado;
+    } else if (num >= 20) {
+        resultado += decenas[num / 10] + " ";
+        num %= 10;
+    }
+    if (num > 0) {
+        resultado += unidades[num] + " ";
+    }
+    return resultado;
+}
+
+string convertirMiles(int num) {
+    string resultado = "";
+    if (num >= 1000) {
+        int miles = num / 1000;
+        if (miles == 1) {
+            resultado += "mil ";
+        } else {
+            resultado += convertirCentenas(miles) + "mil ";
+        }
+        num %= 1000;
+    }
+    resultado += convertirCentenas(num);
+    return resultado;
+}
+
+int main() {
+    int numero;
+    cout << "Ingrese un numero de hasta 6 cifras: ";
+    cin >> numero;
+
+    if (numero == 0) {
+        cout << "cero" << endl;
+    } else {
+        cout << convertirMiles(numero) << endl;
+    }
+
+    return 0;
+}
