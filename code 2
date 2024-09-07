@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+void calcularBilletesYMonedas(int cantidad) {
+    // Definir los billetes y monedas disponibles en soles
+    int billetes[] = {200, 100, 50, 20, 10};
+    int monedas[] = {5, 2, 1};
+    
+    cout << "Para llegar a " << cantidad << " soles, necesitas:" << endl;
+
+    // Calcular los billetes necesarios
+    for (int i = 0; i < 5; i++) {
+        if (cantidad >= billetes[i]) {
+            int numBilletes = cantidad / billetes[i]; // Cantidad de billetes
+            cantidad %= billetes[i]; // Cantidad restante
+            cout << numBilletes << " billete(s) de " << billetes[i] << " soles" << endl;
+        }
+    }
+
+    // Calcular las monedas necesarias
+    for (int i = 0; i < 3; i++) {
+        if (cantidad >= monedas[i]) {
+            int numMonedas = cantidad / monedas[i]; // Cantidad de monedas
+            cantidad %= monedas[i]; // Cantidad restante
+            cout << numMonedas << " moneda(s) de " << monedas[i] << " soles" << endl;
+        }
+    }
+
+    // Si hay algún monto restante, se indica
+    if (cantidad > 0) {
+        cout << "Restante: " << cantidad << " soles (no puede ser cubierto con billetes o monedas disponibles)" << endl;
+    }
+}
+
+int main() {
+    int cantidad;
+    
+    // Pedir la cantidad deseada
+    cout << "Ingrese la cantidad de soles: ";
+    cin >> cantidad;
+
+    // Llamar a la función para calcular los billetes y monedas necesarios
+    calcularBilletesYMonedas(cantidad);
+
+    return 0;
+}
