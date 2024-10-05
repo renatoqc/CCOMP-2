@@ -1,60 +1,78 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
-string unidades[] = {"", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"};
-string decenas[] = {"", "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"};
-string especiales[] = {"diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"};
-string centenas[] = {"", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"};
+string unidades(int numero, bool esCompuesto = false, bool esUltimo = false) {
+    vector<string> nombres = { "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" };
 
-string convertirCentenas(int num) {
-    string resultado = "";
-    if (num == 100) {
-        return "cien";
+    if (numero == 1 && esCompuesto && !esUltimo) {
+        return "un";
     }
-    if (num >= 100) {
-        resultado += centenas[num / 100] + " ";
-        num %= 100;
-    }
-    if (num >= 10 && num < 20) {
-        resultado += especiales[num - 10] + " ";
-        return resultado;
-    } else if (num >= 20) {
-        resultado += decenas[num / 10] + " ";
-        num %= 10;
-    }
-    if (num > 0) {
-        resultado += unidades[num] + " ";
-    }
-    return resultado;
+    return nombres[numero];
 }
 
-string convertirMiles(int num) {
-    string resultado = "";
-    if (num >= 1000) {
-        int miles = num / 1000;
-        if (miles == 1) {
-            resultado += "mil ";
-        } else {
-            resultado += convertirCentenas(miles) + "mil ";
-        }
-        num %= 1000;
+string decenas(int numero, bool esCompuesto = false, bool esUltimo = false) {
+    if (numero < 10) return unidades(numero, esCompuesto, esUltimo);
+    if (numero < 20) {
+        vector<string> nombres = { "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve" };
+        return nombres[numero - 10];
     }
-    resultado += convertirCentenas(num);
-    return resultado;
+    vector<string> nombres = { "", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
+    int d = numero / 10;
+    int u = numero % 10;
+
+    if (u == 0) {
+        return nombres[d];
+    }
+    else if (d == 2) {
+        return "veinti" + unidades(u, esCompuesto, esUltimo);
+    }
+    else {
+        return nombres[d] + (u == 1 ? " y " + unidades(u, esCompuesto, esUltimo) : " y " + unidades(u));
+    }
+}
+
+string centenas(int numero, bool esCompuesto = false, bool esUltimo = false) {
+    if (numero < 100) return decenas(numero, esCompuesto, esUltimo);
+    vector<string> nombres = { "", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos" };
+    int c = numero / 100;
+    int resto = numero % 100;
+    if (numero == 100) return "cien";
+    return nombres[c] + (resto > 0 ? " " + decenas(resto, true, esUltimo) : "");
+}
+
+string miles(int numero) {
+    if (numero < 1000) return centenas(numero, false, true);
+    int mil = numero / 1000;
+    int resto = numero % 1000;
+    if (mil == 1) {
+        return "mil" + (resto > 0 ? " " + centenas(resto, true, true) : "");
+    }
+    else {
+        return centenas(mil, true, false) + " mil" + (resto > 0 ? " " + centenas(resto, false, true) : "");
+    }
+}
+
+string numeroALetras(int numero) {
+    if (numero < 0) {
+        return "menos " + numeroALetras(-numero);
+    }
+    else if (numero < 1000) {
+        return centenas(numero, false, true);
+    }
+    else if (numero < 1000000) {
+        return miles(numero);
+    }
+    return "Numero fuera de rango";
 }
 
 int main() {
     int numero;
-    cout << "Ingrese un numero de hasta 6 cifras: ";
+    cout << "Introduce un numero entre 0 y 999999: ";
     cin >> numero;
 
-    if (numero == 0) {
-        cout << "cero" << endl;
-    } else {
-        cout << convertirMiles(numero) << endl;
-    }
-
+    cout << "El numero " << numero << " en letras es: " << numeroALetras(numero) << endl;
     return 0;
 }
